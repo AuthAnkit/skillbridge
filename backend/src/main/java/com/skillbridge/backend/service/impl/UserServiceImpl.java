@@ -9,12 +9,16 @@ import com.skillbridge.backend.service.UserService;
 import com.skillbridge.backend.transformer.UserTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
 
     @Override
     public UserResponseDTO registerUser(UserRegisterRequestDTO requestDTO) {
@@ -22,6 +26,7 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("User already exists");
         }
         User user = UserTransformer.toEntity(requestDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
         return UserTransformer.toResponseDTO(savedUser);
 
