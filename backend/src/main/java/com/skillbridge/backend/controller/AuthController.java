@@ -1,6 +1,8 @@
 package com.skillbridge.backend.controller;
 
+import com.skillbridge.backend.dto.request.LoginRequestDTO;
 import com.skillbridge.backend.dto.request.UserRegisterRequestDTO;
+import com.skillbridge.backend.dto.response.LoginResponseDTO;
 import com.skillbridge.backend.dto.response.UserResponseDTO;
 import com.skillbridge.backend.entity.User;
 import com.skillbridge.backend.service.UserService;
@@ -22,5 +24,10 @@ public class AuthController {
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterRequestDTO userRegisterRequestDTO) {
         UserResponseDTO userResponseDTO = userService.registerUser(userRegisterRequestDTO);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public   ResponseEntity<LoginResponseDTO> loginUser(@RequestBody LoginRequestDTO requestDTO) {
+        return ResponseEntity.ok(userService.loginUser(requestDTO));
     }
 }
