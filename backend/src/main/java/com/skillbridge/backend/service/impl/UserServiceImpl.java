@@ -46,10 +46,11 @@ public class UserServiceImpl implements UserService {
         if(!isPresent) {
             throw new RuntimeException("Invalid email or password");
         }
-
+        String token = jwtService.generateToken(user.getEmail());
         return LoginResponseDTO.builder()
                 .message("Successfully logged in")
                 .email(user.getEmail())
+                .token(token)
                 .build();
     }
 }
