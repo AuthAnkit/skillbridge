@@ -36,21 +36,21 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public LoginResponseDTO loginUser(LoginRequestDTO requestDTO){
-        User user = userRepository.findByEmail(requestDTO.getEmail())
-                .orElseThrow(()-> new RuntimeException("Invalid email or password")
-        );
+        @Override
+        public LoginResponseDTO loginUser(LoginRequestDTO requestDTO){
+            User user = userRepository.findByEmail(requestDTO.getEmail())
+                    .orElseThrow(()-> new RuntimeException("Invalid email or password")
+            );
 
-        boolean isPresent = passwordEncoder.matches(requestDTO.getPassword(),user.getPassword());
-        if(!isPresent) {
-            throw new RuntimeException("Invalid email or password");
+            boolean isPresent = passwordEncoder.matches(requestDTO.getPassword(),user.getPassword());
+            if(!isPresent) {
+                throw new RuntimeException("Invalid email or password");
+            }
+            String token = jwtService.generateToken(user.getEmail());
+            return LoginResponseDTO.builder()
+                    .message("Successfully logged in")
+                    .email(user.getEmail())
+                    .token(token)
+                    .build();
         }
-        String token = jwtService.generateToken(user.getEmail());
-        return LoginResponseDTO.builder()
-                .message("Successfully logged in")
-                .email(user.getEmail())
-                .token(token)
-                .build();
     }
-}

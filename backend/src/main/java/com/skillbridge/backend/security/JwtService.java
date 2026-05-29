@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "mysecretkeymysecretkeymysecretkey12";
@@ -17,6 +16,7 @@ public class JwtService {
     // Convert secret string into cryptographic key.
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
+    //generating token using email
     public String generateToken(String email) {
         return Jwts.builder()
                 .subject(email)
@@ -25,7 +25,7 @@ public class JwtService {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
-
+    //checking token based on email
     public String extractEmail(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith((javax.crypto.SecretKey)key)
